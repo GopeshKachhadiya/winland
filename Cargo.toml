@@ -3,8 +3,11 @@ name = "winland"
 version = "0.1.0"
 edition = "2021"
 description = "A native Dynamic Island for Windows, in Rust (no Electron)"
+authors = ["Gopesh Kachhadiya"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/GopeshKachhadiya/winland"
+homepage = "https://github.com/GopeshKachhadiya/winland"
 keywords = ["dynamic-island", "windows", "overlay", "wgpu", "now-playing"]
 categories = ["gui", "visualization"]
 

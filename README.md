@@ -56,7 +56,9 @@ recommended:
 
 ```powershell
 # 1. Install Rust: https://rustup.rs  (choose the default x86_64-pc-windows-msvc)
-# 2. Build
+# 2. Clone & build
+git clone https://github.com/GopeshKachhadiya/winland.git
+cd winland
 cargo build --release
 # 3. Run
 ./target/release/winland.exe
@@ -138,6 +140,6 @@ Issues and PRs welcome. The code is organized by concern under `src/`
 
 ## License
 
-[MIT](LICENSE) © contributors. Not affiliated with Apple. "Dynamic Island" is a
-trademark of Apple Inc.; this is an independent, original implementation for
-Windows.
+[MIT](LICENSE) © 2026 Gopesh Kachhadiya. Not affiliated with Apple. "Dynamic
+Island" is a trademark of Apple Inc.; this is an independent, original
+implementation for Windows.
