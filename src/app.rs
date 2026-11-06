@@ -82,6 +82,8 @@ pub struct App {
     bg_color0: [f32; 4],
     bg_color1: [f32; 4],
     forced: bool,
+    /// Screenshot mode: fake data + opaque backdrop for leak-free captures.
+    shot: bool,
     start: Option<Instant>,
     last_frame: Option<Instant>,
     // Temporary self-demo so the morph can be exercised without system input.
@@ -123,6 +125,7 @@ impl Default for App {
             bg_color0: [0.40, 0.20, 0.70, 1.0],
             bg_color1: [0.20, 0.55, 0.80, 1.0],
             forced: false,
+            shot: std::env::var("WINLAND_SHOT").is_ok(),
             start: None,
             last_frame: None,
             demo: std::env::var("WINLAND_DEMO").is_ok(),
@@ -196,6 +199,54 @@ impl App {
             }
             self.demo = false;
             self.forced = true;
+        }
+
+        // Screenshot mode: inject fake, non-private data for README captures.
+        if self.shot {
+            self.forced = true;
+            self.now_playing = Some(NowPlaying {
+                title: "Blinding Lights".into(),
+                artist: "The Weeknd".into(),
+                progress: 0.42,
+                playing: true,
+                position: 101.0,
+                duration: 244.0,
+            });
+            self.bg_color0 = [0.52, 0.22, 0.65, 1.0];
+            self.bg_color1 = [0.20, 0.52, 0.85, 1.0];
+            self.weather = Some(Weather {
+                temp: 72,
+                condition: "Partly Cloudy".into(),
+                city: "San Francisco".into(),
+                high: 76,
+                low: 61,
+                code: 2,
+            });
+            self.buds = Some(("AirPods Pro".into(), 95));
+            self.cal_events = Some(vec![
+                DashEvent { title: "Design review".into(), time: "10:00 AM - 11:00 AM".into(), color: [0.40, 0.55, 1.0, 1.0] },
+                DashEvent { title: "Lunch with Alex".into(), time: "1:00 PM".into(), color: [0.65, 0.40, 0.95, 1.0] },
+                DashEvent { title: "Flight to NYC".into(), time: "Nov 12 \u{00B7} 6:30 PM".into(), color: [0.95, 0.55, 0.25, 1.0] },
+            ]);
+            // Gradient placeholder album art.
+            let (w, h) = (160u32, 160u32);
+            let mut rgba = vec![0u8; (w * h * 4) as usize];
+            for y in 0..h {
+                for x in 0..w {
+                    let t = (x as f32 / w as f32 + y as f32 / h as f32) * 0.5;
+                    let i = ((y * w + x) * 4) as usize;
+                    rgba[i] = ((0.55 + 0.35 * (1.0 - t)).clamp(0.0, 1.0) * 255.0) as u8;
+                    rgba[i + 1] = ((0.22 + 0.33 * t).clamp(0.0, 1.0) * 255.0) as u8;
+                    rgba[i + 2] = ((0.78 - 0.12 * t).clamp(0.0, 1.0) * 255.0) as u8;
+                    rgba[i + 3] = 255;
+                }
+            }
+            self.pending_art = Some(Some(ArtImage { rgba, w, h }));
+            if std::env::var("WINLAND_MODE").is_err() {
+                self.island.set_mode(Mode::Dashboard);
+                self.dashboard_open = true;
+                self.hovered = true;
+            }
         }
 
         // Start the real now-playing reader and system-indicator reader unless
@@ -317,7 +368,7 @@ impl App {
             event_summary: summary,
             events,
             weather: self.weather.clone(),
-            battery: read_power(),
+            battery: if self.shot { Some((true, 86)) } else { read_power() },
             buds: self.buds.clone(),
         }
     }

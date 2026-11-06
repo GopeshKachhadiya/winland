@@ -11,6 +11,23 @@ shader, so the shape morph is genuinely fluid and the whole thing stays light.
 
 ---
 
+## Screenshots
+
+**Full dashboard** — media, calendar, and weather at a glance, over an animated
+backdrop that takes its colors from the album art:
+
+![WinLand dashboard](assets/dashboard.png)
+
+**Now playing** (on hover) and the collapsed pill:
+
+![Now playing](assets/expanded.png)
+![Collapsed pill](assets/compact.png)
+
+> The island is a transparent overlay; these shots use a solid backdrop and
+> placeholder data.
+
+---
+
 ## Features
 
 - **Fluid morph** — SDF-shaped island animated by a spring integrator tuned to

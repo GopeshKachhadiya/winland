@@ -5,6 +5,8 @@
 *.png
 *.ps1
 *.log
+# ...but keep the README screenshots
+!assets/*.png
 
 # Editor / OS
 .vscode/

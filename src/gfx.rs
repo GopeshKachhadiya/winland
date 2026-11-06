@@ -59,6 +59,8 @@ pub struct Renderer {
     uniform_buf: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
     premultiply: bool,
+    /// Screenshot mode: fill an opaque backdrop so captures don't show the desktop.
+    opaque_bg: bool,
     content: ContentRenderer,
     art: ArtRenderer,
     text: TextLayer,
@@ -238,6 +240,7 @@ impl Renderer {
             uniform_buf,
             bind_group,
             premultiply,
+            opaque_bg: std::env::var("WINLAND_SHOT").is_ok(),
             content,
             art,
             text,
@@ -333,8 +336,13 @@ impl Renderer {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        // Clear to fully transparent so only the island shows.
-                        load: wgpu::LoadOp::Clear(wgpu::Color::TRANSPARENT),
+                        // Normally clear to transparent so only the island shows;
+                        // in screenshot mode use an opaque backdrop instead.
+                        load: wgpu::LoadOp::Clear(if self.opaque_bg {
+                            wgpu::Color { r: 0.05, g: 0.055, b: 0.085, a: 1.0 }
+                        } else {
+                            wgpu::Color::TRANSPARENT
+                        }),
                         store: wgpu::StoreOp::Store,
                     },
                     depth_slice: None,
