@@ -1,0 +1,14 @@
+# Rust build output
+/target
+
+# Local dev scratch (screenshots, helper scripts, logs)
+*.png
+*.ps1
+*.log
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini

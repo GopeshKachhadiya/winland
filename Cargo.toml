@@ -1,0 +1,65 @@
+[package]
+name = "winland"
+version = "0.1.0"
+edition = "2021"
+description = "A native Dynamic Island for Windows, in Rust (no Electron)"
+license = "MIT"
+readme = "README.md"
+keywords = ["dynamic-island", "windows", "overlay", "wgpu", "now-playing"]
+categories = ["gui", "visualization"]
+
+[dependencies]
+winit = "0.30"
+wgpu = "30"
+pollster = "1"
+bytemuck = { version = "1", features = ["derive"] }
+raw-window-handle = "0.6"
+glyphon = "0.12"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+log = "0.4"
+env_logger = "0.11"
+tray-icon = "0.26"
+winreg = "0.56"
+ureq = "2"
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+rustfft = "6"
+
+[dependencies.windows]
+version = "0.62"
+features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Dwm",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Variant",
+    "Win32_System_Power",
+    "Win32_System_Threading",
+    "Win32_System_SystemInformation",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_System_Shutdown",
+    "Win32_Devices_DeviceAndDriverInstallation",
+    "Win32_Devices_Properties",
+    "Win32_Media_Audio",
+    "Win32_Media_Audio_Endpoints",
+    "Win32_UI_Shell_PropertiesSystem",
+    "Win32_Devices_FunctionDiscovery",
+    "Foundation",
+    "Foundation_Collections",
+    "Media_Control",
+    "Storage_Streams",
+]
+
+# Small, fast, low-memory release binary.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+opt-level = 1
